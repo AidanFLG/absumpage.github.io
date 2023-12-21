@@ -1,7 +1,7 @@
 # AI-Summarizer By: Aidan Lewis-Grenz and Brenden Slattery
 This is a potential project to build an AI to summarize information from a user's input or through a file.
 
-## To start the program, click this link: [Website Builder](https://AidanLFG/absumpage.github.io/src/app.py)
+## To start the program, click this link: [Website Builder](https://aidanflg.github.io/absumpage.github.io/)
 
 ## ideas for this AI project
 * building a website through GitHub
