@@ -1,0 +1,342 @@
+<!--
+This is the HTML File. The purpose of this file is to create the UI for our project as well as the library to hold our blocks. 
+This also helps create the link between our project and the webpage it has been created on.
+you must add it to the library of blocks that are displayed in the index file. All of the provided blocks are meant to build 
+a block in the UI and create some sort of code when used and code is either downloaded or generated.
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Genesis App Developer</title>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="custom_blocks.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <div>
+        <p>
+            <a href="https://github.com/AidanFLG/AidanFLG.github.io/tree/main/src" target="_blank">
+                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" width="20" height="20">
+                View Source on GitHub
+            </a>
+        </p>
+    </div>
+    <div class="start-buttons">
+        <button onclick="startBlockly()">Start Blockly</button>
+    </div>
+    <div class="blockly-top-tabs">
+        <div id="toolbox-top" style="display: none">
+            <category name="SwiftUI" colour="#5CA7A3" categorystyle="none" expanded="true">
+                <block type="import_swiftui"></block>
+                <block type="import"></block>
+                <block type="create_contentview"></block>
+                <block type="contentview_preview"></block>
+                <block type="content_closer"></block>
+                <block type="swiftui_if"></block>
+                <block type="swiftui_comment"></block>
+            </category>
+            <category name="Structure" colour="#FF7F50" categorystyle="none" expanded="true">
+                <block type="struct"></block>
+                <block type="var_body"></block>
+                <block type="swiftui_function"></block>
+            </category>
+            <category name="Gesture" colour="#FF7F50" categorystyle="none" expanded="true">
+                <block type="on_tap_gesture"></block>
+                <block type="ternary_operator"></block>
+                <block type="foreground_color"></block>
+                <block type="variable_toggle"></block>
+            </category>
+            <category name="Lists" colour="#FF7F50" categorystyle="none" expanded="true">
+                <block type="list_input"></block>
+                <block type="list_item"></block>
+            </category>
+            <category name="Arrays" colour="#FFA500" categorystyle="none" expanded="true">
+                <block type="array_input"></block>
+                <block type="array_item"></block>
+            </category>
+            <category name="Variables" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="variable"></block>
+                <block type="state_variable"></block>
+                <block type="user_variable"></block>
+                <block type="text_input"></block>
+                <block type="user_single"></block>
+                <block type="text_single"></block>
+            </category>
+            <category name="Stacks" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="hstack"></block>
+                <block type="vstack"></block>
+                <block type="zstack"></block>
+            </category>
+            <category name="Actions" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="button"></block>
+                <block type="slider"></block>
+                <block type="modifier_animation"></block>
+            </category>
+            <category name="Looks" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="textfield"></block>
+                <block type="image"></block>
+                <block type="modifier_padding"></block>
+            </category>
+        </div>
+    </div>
+    <div class="row" style="display: none;" id="blocklyDivContainer">
+        <div id="blocklyDiv" class="full-width"></div>
+    </div>
+    <div class="row button-row" style="display: none;" id="blocklyButtons" style="position: absolute; top: 20px; left: 20px;">
+        <button onclick="generateCode()">Generate Swift</button>
+        <button onclick="runCode()">Download Swift</button>
+        <button onclick="saveBlocks()">Save Blocks</button>
+        <button onclick="loadBlocks()">Load Blocks</button>
+        <input type="file" id="loadInput" style="display: none;" onchange="loadBlocksFile(event)">
+    </div>
+    <div class="row" style="display: none;" id="blocklyResult">
+        <div id="codeDiv" class="half-width"></div>
+        <div id="outputDiv" class="half-width"></div>
+    </div>
+    <div id="generated-code-container" class="right-panel" style="position: absolute; top: 30px; right:20px;">
+        <pre id="codeDiv"></pre>
+    </div>
+    <script>
+        var workspace;
+
+        function startBlockly() {
+            document.querySelector('.start-buttons').style.display = 'none';
+            document.querySelector('#blocklyDivContainer').style.display = 'block';
+            document.querySelector('#blocklyButtons').style.display = 'block';
+            document.querySelector('#blocklyResult').style.display = 'block';
+
+            workspace = Blockly.inject('blocklyDiv', {
+                toolbox: document.getElementById('toolbox-top'), // Use the modified toolbox
+                scrollbars: true
+            });
+        }
+
+        function generateCode() {
+            var code = Blockly.JavaScript.workspaceToCode(workspace);
+            var generatedCodeContainer = document.getElementById('generated-code-container');
+            generatedCodeContainer.style.position = 'absolute';
+            generatedCodeContainer.style.top = '40px'; // Adjust as needed
+            generatedCodeContainer.style.right = '10px'; // Adjust as needed
+            generatedCodeContainer.style.width = '300px';
+            // Set the inner text of #codeDiv to the generated code
+            // Make the container visible
+            generatedCodeContainer.style.display = 'block';
+
+            // Set the inner text of #generated-code-container to the generated code
+            generatedCodeContainer.innerText = code;
+            /*var codeDiv = document.getElementById('codeDiv');
+            codeDiv.innerText = code;*/
+            /*document.getElementById('codeDiv').innerText = code;*/
+        }
+
+        function runCode() {
+            var code = Blockly.JavaScript.workspaceToCode(workspace);
+            var blob = new Blob([code], { type: 'text/plain' });
+            var a = document.createElement('a');// Create an anchor element for downloading
+            a.href = URL.createObjectURL(blob);// Set the download link to the Blob URL
+            a.download = 'generated.swift';// Set the desired filename for the downloaded file (e.g., 'generated.swift')
+            // Set the position of the anchor element
+            a.style.position = 'absolute';
+            a.style.top = '40px'; // Adjust as needed
+            a.style.right = '10px'; // Adjust as needed
+            a.style.width  = "300px";
+            a.style.display = 'none'; // Hide the anchor element
+            document.body.appendChild(a);// Append the anchor element to the document body
+            a.click();// Simulate a click on the anchor to trigger the download
+            document.body.removeChild(a);// Remove the anchor element from the document body
+        }
+
+        function saveBlocks() {
+            var xml = Blockly.Xml.workspaceToDom(workspace);
+            var xmlText = Blockly.Xml.domToPrettyText(xml);
+            var blob = new Blob([xmlText], { type: 'text/xml' });
+            var a = document.createElement('a');
+            a.download = 'blocks.xml';
+            a.href = URL.createObjectURL(blob);
+            a.click();
+        }
+
+        function loadBlocks() {
+            document.getElementById('loadInput').click();
+        }
+
+        function loadBlocksFile(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var xml = Blockly.utils.xml.textToDom(e.target.result);
+                Blockly.Xml.appendDomToWorkspace(xml, workspace);
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>Genesis App Developer</title>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="custom_blocks.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <div>
+        <p>
+            <a href="https://github.com/AidanFLG/AidanFLG.github.io/tree/main/src" target="_blank">
+                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" width="20" height="20">
+                View Source on GitHub
+            </a>
+        </p>
+    </div>
+    <div class="start-buttons">
+        <button onclick="startBlockly()">Start Blockly</button>
+    </div>
+    <div class="blockly-top-tabs">
+        <div id="toolbox-top" style="display: none">
+            <category name="SwiftUI" colour="#5CA7A3" categorystyle="none" expanded="true">
+                <block type="import_swiftui"></block>
+                <block type="import"></block>
+                <block type="create_contentview"></block>
+                <block type="contentview_preview"></block>
+                <block type="content_closer"></block>
+                <block type="swiftui_if"></block>
+                <block type="swiftui_comment"></block>
+            </category>
+            <category name="Structure" colour="#FF7F50" categorystyle="none" expanded="true">
+                <block type="struct"></block>
+                <block type="var_body"></block>
+                <block type="swiftui_function"></block>
+            </category>
+            <category name="Gesture" colour="#FF7F50" categorystyle="none" expanded="true">
+                <block type="on_tap_gesture"></block>
+                <block type="ternary_operator"></block>
+                <block type="foreground_color"></block>
+                <block type="variable_toggle"></block>
+            </category>
+            <category name="Lists" colour="#FF7F50" categorystyle="none" expanded="true">
+                <block type="list_input"></block>
+                <block type="list_item"></block>
+            </category>
+            <category name="Arrays" colour="#FFA500" categorystyle="none" expanded="true">
+                <block type="array_input"></block>
+                <block type="array_item"></block>
+            </category>
+            <category name="Variables" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="variable"></block>
+                <block type="state_variable"></block>
+                <block type="user_variable"></block>
+                <block type="text_input"></block>
+                <block type="user_single"></block>
+                <block type="text_single"></block>
+            </category>
+            <category name="Stacks" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="hstack"></block>
+                <block type="vstack"></block>
+                <block type="zstack"></block>
+            </category>
+            <category name="Actions" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="button"></block>
+                <block type="slider"></block>
+                <block type="modifier_animation"></block>
+            </category>
+            <category name="Looks" colour="#5650FF" categorystyle="none" expanded="true">
+                <block type="textfield"></block>
+                <block type="image"></block>
+                <block type="modifier_padding"></block>
+            </category>
+            <category name="State Variables" colour="#4C97FF" categorystyle="none" expanded="true">
+                <block type="state_variable"></block>
+                <block type="state_variable_string"></block>
+                <block type="state_variable_double"></block>
+            </category>
+
+        </div>
+    </div>
+    <div class="row" style="display: none;" id="blocklyDivContainer">
+        <div id="blocklyDiv" class="full-width"></div>
+    </div>
+    <div class="row button-row" style="display: none;" id="blocklyButtons" style="position: absolute; top: 20px; left: 20px;">
+        <button onclick="generateCode()">Generate Swift</button>
+        <button onclick="runCode()">Download Swift</button>
+        <button onclick="saveBlocks()">Save Blocks</button>
+        <button onclick="loadBlocks()">Load Blocks</button>
+        <input type="file" id="loadInput" style="display: none;" onchange="loadBlocksFile(event)">
+    </div>
+    <div class="row" style="display: none;" id="blocklyResult">
+        <div id="codeDiv" class="half-width"></div>
+        <div id="outputDiv" class="half-width"></div>
+    </div>
+    <div id="generated-code-container" class="right-panel" style="position: absolute; top: 30px; right:20px;">
+        <pre id="codeDiv"></pre>
+    </div>
+    <script>
+        var workspace;
+
+        function startBlockly() {
+            document.querySelector('.start-buttons').style.display = 'none';
+            document.querySelector('#blocklyDivContainer').style.display = 'block';
+            document.querySelector('#blocklyButtons').style.display = 'block';
+            document.querySelector('#blocklyResult').style.display = 'block';
+
+            workspace = Blockly.inject('blocklyDiv', {
+                toolbox: document.getElementById('toolbox-top'), // Use the modified toolbox
+                scrollbars: true
+            });
+        }
+
+        function generateCode() {
+            var code = Blockly.JavaScript.workspaceToCode(workspace);
+            document.getElementById('codeDiv').innerText = code;
+        }
+
+        function runCode() {
+            var code = Blockly.JavaScript.workspaceToCode(workspace);
+            var blob = new Blob([code], { type: 'text/plain' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'generated.swift';
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function saveBlocks() {
+            var xml = Blockly.Xml.workspaceToDom(workspace);
+            var xmlText = Blockly.Xml.domToPrettyText(xml);
+            var blob = new Blob([xmlText], { type: 'text/xml' });
+            var a = document.createElement('a');
+            a.download = 'blocks.xml';
+            a.href = URL.createObjectURL(blob);
+            a.click();
+        }
+
+        function loadBlocks() {
+            document.getElementById('loadInput').click();
+        }
+
+        function loadBlocksFile(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var xml = Blockly.utils.xml.textToDom(e.target.result);
+                Blockly.Xml.appendDomToWorkspace(xml, workspace);
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+
+</html>
+ -->
+
+

@@ -1,0 +1,105 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Improve overall layout */
+#blocklyDivContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+/* New styles for the generated code container */
+#generated-code-container {
+    position: absolute;
+    top: 40px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    width: 300px; /* Adjust width */
+    height: 700px; /* Adjust height */
+    /*background-color: #fff; Adjust background color */
+    border: 1px solid #ccc; /* Add border for visibility */
+    overflow: auto; /* Enable scrolling if needed */
+    color: black; /* Adjust text color */
+}
+
+#blocklyDiv {
+    flex: 1;
+    min-width: 50%;
+    max-width: 70%; /* Adjust as needed */
+    height: 100%;
+    overflow: auto;
+    background-color: #f0f0f0;
+}
+
+#blocklyButtons {
+    display: flex;
+    justify-content: space-between;
+    height: auto; /* Adjust as needed */
+}
+
+.button-row {
+    position: absolute;
+    top: 20px; /* Adjust as needed */
+    left: 300px; /* Adjust as needed */
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+/* Style for the category tabs (toolbox) */
+.toolbox-tab {
+    background-color: #2196F3;
+    color: white;
+    padding: 5px 20px;
+    margin: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+.blocklyToolboxDiv .blocklyTreeRow {
+    padding: 4px 0;
+}
+
+.toolbox-tab.toolbox-tab-selected {
+    background-color: #1976D2;
+}
+
+.toolbox-tab:hover {
+    background-color: #1976D2;
+}
+
+/* Ensure blocks can be moved and are not obscured */
+/*.blocklyWorkspace {
+    position: relative;
+    z-index: 0;
+} */
+
+.blocklyWorkspace .blocklyBlock {
+    margin-bottom: 8px; /* Adjust the value to set the desired padding */
+}
+
+/* Optionally, add a border to blocks for visual separation */
+.blocklyBlock {
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+
+/* Customize scrollbars as needed */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
