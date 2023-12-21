@@ -1,6 +1,8 @@
 # AI-Summarizer
 This is a potential project to build an AI to summarize information from a user's input or through a file.
 
+## To start the program, click this link: [Website Builder](https://AidanFLG/algnbssummarysite.github.io/src/)
+
 ## ideas for this AI project
 * building a website through GitHub
 * Build the AI
